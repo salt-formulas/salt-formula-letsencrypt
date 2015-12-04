@@ -1,0 +1,15 @@
+
+{%- set source_engine = salt['pillar.get']('letsencrypt:client:source:engine') %}
+
+{%- load_yaml as base_defaults %}
+Debian:
+  pkgs:
+  - git
+  cli_install_dir: /opt/letsencrypt
+RedHat:
+  pkgs:
+  - git
+  cli_install_dir: /opt/letsencrypt
+{%- endload %}
+
+{%- set client = salt['grains.filter_by'](base_defaults, merge=salt['pillar.get']('letsencrypt:client')) %}
