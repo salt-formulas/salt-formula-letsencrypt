@@ -1,5 +1,8 @@
 {%- from "letsencrypt/map.jinja" import client with context %}
 
+{%- set monkey_patch_stop = 'service apache2 stop;service nginx stop;' %}
+{%- set monkey_patch_start = ';service apache2 start;service nginx start;' %}
+
 {%- if client.enabled %}
 
 letsencrypt-packages:
@@ -21,13 +24,13 @@ letsencrypt-client-git:
 create-initial-cert-{{ setname }}-{{ domainlist[0] }}:
   cmd.run:
     - unless: ls /etc/letsencrypt/live/{{ domainlist[0] }}
-    - name: {{ client.cli_install_dir }}/letsencrypt-auto -d {{ domainlist|join(' -d ') }} certonly
+    - name: {{ monkey_patch_stop }}{{ client.cli_install_dir }}/letsencrypt-auto -d {{ domainlist|join(' -d ') }} certonly{{ monkey_patch_start }}
     - require:
       - file: letsencrypt-config
 
 letsencrypt-crontab-{{ setname }}-{{ domainlist[0] }}:
   cron.present:
-    - name: {{ client.cli_install_dir }}/letsencrypt-auto -d {{ domainlist|join(' -d ') }} certonly
+    - name: {{ monkey_patch_stop }}{{ client.cli_install_dir }}/letsencrypt-auto -d {{ domainlist|join(' -d ') }} certonly{{ monkey_patch_start }}
     - month: '*/2'
     - minute: random
     - hour: random
@@ -35,6 +38,8 @@ letsencrypt-crontab-{{ setname }}-{{ domainlist[0] }}:
     - identifier: letsencrypt-{{ setname }}-{{ domainlist[0] }}
     - require:
       - cmd: create-initial-cert-{{ setname }}-{{ domainlist[0] }}
+
+
 {% endfor %}
 
 {%- endif %}
