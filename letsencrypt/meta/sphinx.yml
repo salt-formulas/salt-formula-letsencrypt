@@ -1,0 +1,9 @@
+doc:
+  name: Kibana
+  description: Kibana is an open source (Apache Licensed), browser based analytics and search interface to Logstash and other timestamped data sets stored in ElasticSearch.
+  role:
+  {%- if pillar.letsencrypt.client is defined %}
+    client:
+      name: client
+      param: {}
+  {%- endif %}
