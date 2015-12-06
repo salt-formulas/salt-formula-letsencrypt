@@ -1,6 +1,6 @@
 doc:
   name: Kibana
-  description: Kibana is an open source (Apache Licensed), browser based analytics and search interface to Logstash and other timestamped data sets stored in ElasticSearch.
+  description: The Let's Encrypt Client is a fully-featured, extensible client for the Let's Encrypt CA (or any other CA that speaks the ACME protocol) that can automate the tasks of obtaining certificates and configuring webservers to use them.
   role:
   {%- if pillar.letsencrypt.client is defined %}
     client:
