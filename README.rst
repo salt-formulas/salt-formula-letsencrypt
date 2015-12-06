@@ -31,6 +31,30 @@ Sample pillars
           intranet:
             - intranet.example.com
 
+Example of authentication via another port without stopping nginx server::
+
+    location /.well-known/acme-challenge/ {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_pass http://{{ site.host.name }}:9999/.well-known/acme-challenge/;
+    }
+
+.. code-block:: yaml
+
+    letsencrypt:
+      client:
+        enabled: true
+        config: |
+          ...
+          renew-by-default = True
+          http-01-port = 9999
+          standalone-supported-challenges = http-01
+        domainset:
+          www:
+            - example.com
+
+
 Read more
 =========
 
