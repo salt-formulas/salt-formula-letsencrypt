@@ -1,4 +1,4 @@
-salt-formula-pritunl (0.1) trusty; urgency=medium
+salt-formula-letsencrypt (0.1) trusty; urgency=medium
 
   * Initial release
 
