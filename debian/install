@@ -1,2 +1,0 @@
-letsencrypt/*             /usr/share/salt-formulas/env/letsencrypt/
-metadata/service/*      /usr/share/salt-formulas/reclass/service/letsencrypt/
