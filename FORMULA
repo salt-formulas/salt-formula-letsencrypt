@@ -1,0 +1,8 @@
+name: letsencrypt
+os: Debian, RedHat
+os_family: Debian, RedHat
+version: 201606
+release: 1
+summary: letsencrypt salt formula
+description: Install and configure letsencrypt system.
+top_level_dir: letsencrypt
