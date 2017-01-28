@@ -2,20 +2,50 @@
 
 {%- if client.enabled %}
 
-letsencrypt-packages:
+{%- if client.source.engine == 'pkg' %}
+
+certbot_packages:
   pkg.installed:
-  - names: {{ client.pkgs }}
+    - names: {{ client.source.pkgs }}
+    - watch_in:
+      - cmd: certbot_installed
+
+{%- elif client.source.engine == 'url' %}
+
+certbot_auto_file:
+  file.managed:
+    - name: {{ client.source.cli }}
+    - source: {{ client.source.url|default('https://dl.eff.org/certbot-auto') }}
+    - replace: true
+    - mode: 755
+    - watch_in:
+      - cmd: certbot_installed
+
+{%- elif client.source.engine == 'docker' %}
+
+certbot_wrapper:
+  file.managed:
+    - name: /usr/local/bin/certbot
+    - source: salt://letsencrypt/files/certbot
+    - template: jinja
+    - defaults:
+        image: {{ client.source.image|default('deliverous/certbot') }}
+        conf_dir: {{ client.conf_dir }}
+    - mode: 755
+    - watch_in:
+      - cmd: certbot_installed
+
+{%- endif %}
+
+certbot_installed:
+  cmd.wait:
+    - name: "{{ client.source.cli }} --version"
 
 letsencrypt-config:
   file.managed:
-    - name: /etc/letsencrypt/cli.ini
+    - name: {{ client.conf_dir }}/cli.ini
     - makedirs: true
     - contents_pillar: letsencrypt:client:config
-
-letsencrypt-client-git:
-  git.latest:
-    - name: https://github.com/letsencrypt/letsencrypt
-    - target: {{ client.cli_install_dir }}
 
 /usr/local/bin/check_letsencrypt_cert.sh:
   file.managed:
@@ -26,9 +56,9 @@ letsencrypt-client-git:
 
         for DOMAIN in "$@"
         do
-            openssl x509 -in /etc/letsencrypt/live/$1/cert.pem -noout -text | grep DNS:${DOMAIN} > /dev/null || exit 1
+            openssl x509 -in {{ client.conf_dir }}/live/$1/cert.pem -noout -text | grep DNS:${DOMAIN} > /dev/null || exit 1
         done
-        CERT=$(date -d "$(openssl x509 -in /etc/letsencrypt/live/$1/cert.pem -enddate -noout | cut -d'=' -f2)" "+%s")
+        CERT=$(date -d "$(openssl x509 -in {{ client.conf_dir }}/live/$1/cert.pem -enddate -noout | cut -d'=' -f2)" "+%s")
         CURRENT=$(date "+%s")
         REMAINING=$((($CERT - $CURRENT) / 60 / 60 / 24))
         [ "$REMAINING" -gt "30" ] || exit 1
@@ -38,15 +68,14 @@ letsencrypt-client-git:
 create-initial-cert-{{ setname }}-{{ domainlist[0] }}:
   cmd.run:
     - unless: /usr/local/bin/check_letsencrypt_cert.sh {{ domainlist|join(' ') }}
-    - name: {{ client.cli_install_dir }}/letsencrypt-auto -d {{ domainlist|join(' -d ') }} certonly
+    - name: {{ client.source.cli }} -d {{ domainlist|join(' -d ') }} certonly
     - require:
       - file: letsencrypt-config
+      - cmd: certbot_installed
 
 letsencrypt-crontab-{{ setname }}-{{ domainlist[0] }}:
   cron.present:
-    - name: /usr/local/bin/check_letsencrypt_cert.sh {{ domainlist|join(' ') }} > /dev/null ||{{
-          client.cli_install_dir
-        }}/letsencrypt-auto -d {{ domainlist|join(' -d ') }} certonly
+    - name: /usr/local/bin/check_letsencrypt_cert.sh {{ domainlist|join(' ') }} > /dev/null || {{ client.source.cli }} -d {{ domainlist|join(' -d ') }} certonly
     - month: '*'
     - minute: random
     - hour: random

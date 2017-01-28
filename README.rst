@@ -8,6 +8,49 @@ Service letsencrypt description
 Sample pillars
 ==============
 
+There are 3 installation methods available:
+
+- package (default for Debian)
+
+  For Debian Jessie, you need to use jessie-backports repository. For Ubuntu,
+  use Launchpad PPA providing certbot package. You can use linux formula to
+  manage these APT sources.
+
+  .. code-block:: yaml
+
+      letsencrypt:
+        client:
+          source:
+            engine: pkg
+
+- URL to certbot-auto (default)
+
+  This is default installation method for systems with no available certbot
+  package.
+
+  .. code-block:: yaml
+
+      letsencrypt:
+        client:
+          source:
+            engine: url
+            url: "https://dl.eff.org/certbot-auto"
+
+- Docker container
+
+  Alternate installation method where Docker image is used to provide certbot
+  tool and executed using wrapper script.
+
+  .. code-block:: yaml
+
+      letsencrypt:
+        client:
+          source:
+            engine: docker
+            image: "deliverous/certbot"
+
+Common metadata:
+
 .. code-block:: yaml
 
     letsencrypt:
