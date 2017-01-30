@@ -1,0 +1,15 @@
+{%- from "letsencrypt/map.jinja" import client with context -%}
+{#-
+    vim: syntax=jinja
+-#}
+[Unit]
+Description=Certbot
+{%- if client.source.engine == 'pkg' %}
+Documentation=file:///usr/share/doc/python-certbot-doc/html/index.html
+{%- endif %}
+Documentation=https://letsencrypt.readthedocs.io/en/latest/
+
+[Service]
+Type=oneshot
+ExecStart={{ client.source.cli }} --no-self-upgrade -q renew
+PrivateTmp=true

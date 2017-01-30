@@ -8,6 +8,9 @@ Service letsencrypt description
 Sample pillars
 ==============
 
+Installation
+------------
+
 There are 3 installation methods available:
 
 - package (default for Debian)
@@ -48,6 +51,96 @@ There are 3 installation methods available:
           source:
             engine: docker
             image: "deliverous/certbot"
+
+Usage
+-----
+
+Default authentication method using standalone server on specified port.
+But this won't work without configuration of apache/nginx (read on) unless you
+don't have webserver running so you can select port 80 or 443.
+
+.. code-block:: yaml
+
+    letsencrypt:
+      client:
+        email: root@dummy.org
+        auth:
+          method: standalone
+          type: http-01
+          port: 9999
+        domain:
+          dummy.org:
+            enabled: true
+          www.dummy.org:
+            enabled: true
+
+However ACME server always visits port 80 (or 443) where most likely Apache or
+Nginx is listening. This means that you need to configure
+``/.well-known/acme-challenge/`` to proxy requests on localhost:9999.
+For example, ensure you have following configuration for Apache:
+
+::
+
+  ProxyPass "/.well-known/acme-challenge/" "http://127.0.0.1:9999/.well-known/acme-challenge/" retry=1
+  ProxyPassReverse "/.well-known/acme-challenge/" "http://127.0.0.1:9999/.well-known/acme-challenge/"
+
+  <Location "/.well-known/acme-challenge/">
+    ProxyPreserveHost On
+    Order allow,deny
+    Allow from all
+    Require all granted
+  </Location>
+
+You can also use ``apache`` or ``nginx`` auth methods and let certbot do
+what's needed, this should be the simplest option.
+
+.. code-block:: yaml
+
+    letsencrypt:
+      client:
+        auth: apache
+
+Alternatively you can use webroot authentication (using eg. existing apache
+installation serving directory for all sites):
+
+.. code-block:: yaml
+
+    letsencrypt:
+      client:
+        auth:
+          method: webroot
+          path: /var/www/html
+          port: 80
+        domain:
+          dummy.org:
+            enabled: true
+          www.dummy.org:
+            enabled: true
+
+It's also possible to override auth method or other options only for single
+domain:
+
+.. code-block:: yaml
+
+    letsencrypt:
+      client:
+        email: root@dummy.org
+        auth:
+          method: standalone
+          type: http-01
+          port: 9999
+        domain:
+          dummy.org:
+            enabled: true
+            auth:
+              method: webroot
+              path: /var/www/html/dummy.org
+              port: 80
+          www.dummy.org:
+            enabled: true
+
+Legacy configuration
+--------------------
 
 Common metadata:
 
@@ -101,4 +194,4 @@ Example of authentication via another port without stopping nginx server::
 Read more
 =========
 
-* links
+* `Certbot authentication plugins <https://letsencrypt.readthedocs.io/en/latest/using.html#getting-certificates-and-choosing-plugins>`_

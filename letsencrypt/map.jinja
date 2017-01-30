@@ -7,12 +7,20 @@ Debian:
       - certbot
     cli: certbot
   conf_dir: /etc/letsencrypt
+  auth:
+    method: standalone
+    type: http-01
+    port: 9999
 default:
   source:
     engine: url
     url: "https://dl.eff.org/certbot-auto"
     cli: /usr/local/bin/certbot
   conf_dir: /etc/letsencrypt
+  auth:
+    method: standalone
+    type: http-01
+    port: 9999
 {%- endload %}
 
 {%- set client = salt['grains.filter_by'](base_defaults, merge=salt['pillar.get']('letsencrypt:client')) %}

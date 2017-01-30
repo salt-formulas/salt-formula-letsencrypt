@@ -1,3 +1,7 @@
+{%- from "letsencrypt/map.jinja" import client with context -%}
+{#-
+    vim: syntax=jinja
+-#}
 #!/bin/bash
 # ==================================================
 # This file is managed by SaltStack certbot formula.
@@ -9,6 +13,7 @@
 # This script will attempt to mirror the host paths by using volumes for the
 # following paths:
 #   * {{ conf_dir }}
+#   * according paths if webroot auth is used
 #
 # You can add additional volumes (or any docker run options) using
 # the $CERTBOT_OPTIONS environment variable.
@@ -23,6 +28,17 @@ CONF_DIR=${CONF_DIR:-"{{ conf_dir }}"}
 if [ -d "$CONF_DIR" ]; then
     VOLUMES="-v $CONF_DIR:$CONF_DIR"
 fi
+
+{#- Generate list of volumes that we need based on model. But best solution
+    would be to parse command-line args and decide on that #}
+{%- if client.auth.method == 'webroot' %}
+VOLUMES="$VOLUMES -v {{ client.auth.path|default('/var/www') }}:{{ client.auth.path|default('/var/www') }}"
+{%- endif %}
+{%- for domain in client.get('domain', {}).iteritems() %}
+{%- if domain.get('auth', {}).get('method', None) == 'webroot' %}
+VOLUMES="$VOLUMES -v {{ domain.auth.path|default('/var/www') }}:{{ domain.auth.path|default('/var/www') }}"
+{%- endif %}
+{%- endfor %}
 
 # Only allocate tty if we detect one
 if [ -t 1 ]; then
