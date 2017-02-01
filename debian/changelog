@@ -1,3 +1,10 @@
+salt-formula-letsencrypt (1.0) trusty; urgency=medium
+
+  * Multiple installation methods
+  * Metadata model refactor (with backward compatibility)
+
+ -- Filip Pytloun <filip@pytloun.cz>  Wed, 01 Feb 2017 13:51:32 +0100
+
 salt-formula-letsencrypt (0.1) trusty; urgency=medium
 
   * Initial release
