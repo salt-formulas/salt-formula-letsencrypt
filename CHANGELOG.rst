@@ -1,7 +1,7 @@
 letsencrypt formula
 =========================================
 
-1.0 (2017-02-01)
+2017.2 (2017-02-01)
 
 - multiple installation methods
 - metadata model refactor (with backward compatibility)

@@ -1,4 +1,4 @@
-salt-formula-letsencrypt (1.0) trusty; urgency=medium
+salt-formula-letsencrypt (2017.2) trusty; urgency=medium
 
   * Multiple installation methods
   * Metadata model refactor (with backward compatibility)
