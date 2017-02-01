@@ -1,15 +1,26 @@
 
 {%- load_yaml as base_defaults %}
 Debian:
-  pkgs:
-  - git
-  - python-dialog
-  cli_install_dir: /opt/letsencrypt
-RedHat:
-  pkgs:
-  - git
-  - python-dialog
-  cli_install_dir: /opt/letsencrypt
+  source:
+    engine: pkg
+    pkgs:
+      - certbot
+    cli: certbot
+  conf_dir: /etc/letsencrypt
+  auth:
+    method: standalone
+    type: http-01
+    port: 9999
+default:
+  source:
+    engine: url
+    url: "https://dl.eff.org/certbot-auto"
+    cli: /usr/local/bin/certbot
+  conf_dir: /etc/letsencrypt
+  auth:
+    method: standalone
+    type: http-01
+    port: 9999
 {%- endload %}
 
 {%- set client = salt['grains.filter_by'](base_defaults, merge=salt['pillar.get']('letsencrypt:client')) %}
