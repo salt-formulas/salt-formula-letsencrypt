@@ -31,6 +31,13 @@ certbot_auto_file:
     - require:
       - pkg: certbot_auto_packages
 
+certbot_wrapper:
+  file.symlink:
+  - name: /usr/local/bin/certbot
+  - target: /root/certbot
+  - require:
+    - cmd: certbot_auto_file
+
 {%- elif client.source.engine == 'docker' %}
 
 certbot_wrapper:
@@ -76,7 +83,7 @@ certbot_timer:
 certbot_timer_enabled:
   service.running:
     - name: certbot.timer
-    - enabled: true
+    - enable: true
     - watch:
       - file: certbot_timer
 
