@@ -13,6 +13,7 @@ certbot_packages:
     - names: {{ client.source.pkgs }}
     - watch_in:
       - cmd: certbot_installed
+    - fromrepo: jessie-backports
 
 {%- elif client.source.engine == 'url' %}
 
@@ -76,7 +77,7 @@ certbot_timer:
 certbot_timer_enabled:
   service.running:
     - name: certbot.timer
-    - enabled: true
+    - enable: true
     - watch:
       - file: certbot_timer
 
