@@ -51,13 +51,6 @@ certbot_installed:
   cmd.wait:
     - name: "{{ client.source.cli }} --non-interactive --version"
 
-certbot_cron:
-  file.managed:
-    - name: /etc/cron.d/certbot
-    - source: salt://letsencrypt/files/cron
-    - require:
-      - cmd: certbot_installed
-
 {%- if grains.get('init', None) == 'systemd' %}
 
 certbot_service:
@@ -79,6 +72,15 @@ certbot_timer_enabled:
     - enabled: true
     - watch:
       - file: certbot_timer
+
+{%- else %}
+
+certbot_cron:
+  file.managed:
+    - name: /etc/cron.d/certbot
+    - source: salt://letsencrypt/files/cron
+    - require:
+      - cmd: certbot_installed
 
 {%- endif %}
 
