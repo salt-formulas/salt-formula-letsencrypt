@@ -23,7 +23,7 @@ certbot_{{ domain }}:
         --{{ auth.method }}
         {%- endif %}
         -d {{ params.name|default(domain) }}
-        {%- for d in params.get('multi', []) %}
+        {%- for d in params.get('names', []) %}
         -d {{ d }}
         {%- endfor %}
     - creates: {{ client.conf_dir }}/live/{{ params.name|default(domain) }}/cert.pem

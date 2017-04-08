@@ -73,6 +73,12 @@ don't have webserver running so you can select port 80 or 443.
             enabled: true
           www.dummy.org:
             enabled: true
+          # Following will produce multidomain certificate:
+          site.dummy.org:
+            enabled: true
+            names:
+              - dummy.org
+              - www.dummy.org
 
 However ACME server always visits port 80 (or 443) where most likely Apache or
 Nginx is listening. This means that you need to configure
@@ -138,6 +144,39 @@ domain:
               port: 80
           www.dummy.org:
             enabled: true
+
+You are able to use multidomain certificates:
+
+.. code-block:: yaml
+
+    letsencrypt:
+      client:
+        email: sylvain@home
+        staging: true
+        auth:
+          method: apache
+        domain:
+          keynotdomain:
+            enabled: true
+            name: ls.opensource-expert.com
+            names:
+            - www.ls.opensource-expert.com
+            - vim22.opensource-expert.com
+            - www.vim22.opensource-expert.com
+          rm.opensource-expert.com:
+            enabled: true
+            names:
+            - www.rm.opensource-expert.com
+          vim7.opensource-expert.com:
+            enabled: true
+            names:
+            - www.vim7.opensource-expert.com
+          vim88.opensource-expert.com:
+            enabled: true
+            names:
+            - www.vim88.opensource-expert.com
+            - awk.opensource-expert.com
+            - www.awk.opensource-expert.com
 
 Legacy configuration
 --------------------
