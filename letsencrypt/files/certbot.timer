@@ -3,7 +3,9 @@ Description=Run certbot twice daily
 
 [Timer]
 OnCalendar=*-*-* 00,12:00:00
+{%- if grains.oscodename == 'jessie' %}
 RandomizedDelaySec=3600
+{%- endif %}
 Persistent=true
 
 [Install]

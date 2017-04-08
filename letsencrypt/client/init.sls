@@ -64,6 +64,7 @@ certbot_timer:
   file.managed:
     - name: /etc/systemd/system/certbot.timer
     - source: salt://letsencrypt/files/certbot.timer
+    - template: jinja
     - require:
       - file: certbot_service
     - watch_in:
