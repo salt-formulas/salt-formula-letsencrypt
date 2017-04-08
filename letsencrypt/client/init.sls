@@ -53,6 +53,7 @@ certbot_installed:
 
 {%- if grains.get('init', None) == 'systemd' %}
 
+{%- if client.source.engine == 'pkg' %}
 certbot_service:
   file.managed:
     - name: /etc/systemd/system/certbot.service
@@ -65,13 +66,16 @@ certbot_timer:
     - source: salt://letsencrypt/files/certbot.timer
     - require:
       - file: certbot_service
+    - watch_in:
+      - service: certbot_timer_enabled
+{%- endif %}
 
 certbot_timer_enabled:
   service.running:
     - name: certbot.timer
     - enabled: true
-    - watch:
-      - file: certbot_timer
+    - require:
+      - cmd: certbot_installed
 
 {%- else %}
 
