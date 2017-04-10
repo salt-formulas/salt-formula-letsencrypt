@@ -1,3 +1,9 @@
+salt-formula-letsencrypt (2017.2.2) trusty; urgency=medium
+
+  * New version
+
+ -- Filip Pytloun <filip@pytloun.cz>  Mon, 10 Apr 2017 14:21:27 +0200
+
 salt-formula-letsencrypt (2017.2.1) trusty; urgency=medium
 
   * New version

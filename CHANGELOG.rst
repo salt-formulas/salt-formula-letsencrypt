@@ -2,10 +2,28 @@
 Changelog
 =========
 
+Version 2017.2.2
+=============================
+
+commit 976019f2699dcbd0e071c296b65714920802b097
+Author: Vincas Dargis <vindrg@gmail.com>
+
+    Fix systemd version detection
+
 Version 2017.2.1
 =============================
 
-commit b24be279ad73abefb1caebcad826deb98ce01430 (HEAD -> master, origin/master, origin/HEAD)
+commit 2a5e83de883d31dd9abc9728f1b0011c86aeaf4c (tag: 2017.2.1)
+Author: Filip Pytloun <filip@pytloun.cz>
+
+    Fix tagging
+
+commit 4859e224bc7ce490b1a4f6b0648dbae525eec797
+Author: Filip Pytloun <filip@pytloun.cz>
+
+    Version 2017.2.1
+
+commit b24be279ad73abefb1caebcad826deb98ce01430
 Author: Filip Pytloun <filip@pytloun.cz>
 
     Fix systemd version behavior
