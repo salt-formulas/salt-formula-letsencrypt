@@ -3,7 +3,7 @@ Description=Run certbot twice daily
 
 [Timer]
 OnCalendar=*-*-* 00,12:00:00
-{%- if grains.systemd.version >= 229 %}
+{%- if grains.systemd.version|int >= 229 %}
 RandomizedDelaySec=3600
 {%- endif %}
 Persistent=true
