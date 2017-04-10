@@ -60,6 +60,16 @@ certbot_service:
     - source: salt://letsencrypt/files/certbot.service
     - template: jinja
 
+{# reload systemd unit file when it changes #}
+certbot_service_available:
+  module.watch:
+    - name: service.available
+    - m_name: certbot.service
+    - require:
+      - file: certbot_service
+    - watch:
+      - file: certbot_service
+  
 certbot_timer:
   file.managed:
     - name: /etc/systemd/system/certbot.timer
