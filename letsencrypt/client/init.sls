@@ -84,7 +84,7 @@ certbot_timer:
 certbot_timer_enabled:
   service.running:
     - name: certbot.timer
-    - enabled: true
+    - enable: true
     - require:
       - cmd: certbot_installed
 
