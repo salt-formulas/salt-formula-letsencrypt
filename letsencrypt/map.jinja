@@ -5,6 +5,10 @@ Debian:
     engine: pkg
     pkgs:
       - certbot
+    pkgs_apache:
+      - python-certbot-apache
+    pkgs_nginx:
+      - python-certbot-nginx
     cli: certbot
   conf_dir: /etc/letsencrypt
   auth:
