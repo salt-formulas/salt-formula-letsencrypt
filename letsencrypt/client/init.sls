@@ -7,10 +7,14 @@ include:
   - letsencrypt.client.domain
 
 {%- if client.source.engine == 'pkg' %}
+{% set extra_packages = [] %}
+{% if client.auth.method in ("apache", "nginx") %}
+    {% set extra_packages = client.source.get("pkgs_" + client.auth.method, []) %}
+{% endif %}
 
 certbot_packages:
   pkg.installed:
-    - names: {{ client.source.pkgs }}
+    - names: {{ client.source.pkgs + extra_packages }}
     - watch_in:
       - cmd: certbot_installed
 
