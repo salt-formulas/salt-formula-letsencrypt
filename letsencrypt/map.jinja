@@ -15,6 +15,7 @@ Debian:
     method: standalone
     type: http-01
     port: 9999
+  pkg_openssl: openssl
 default:
   source:
     engine: url
@@ -25,6 +26,7 @@ default:
     method: standalone
     type: http-01
     port: 9999
+  pkg_openssl: openssl
 {%- endload %}
 
 {%- set client = salt['grains.filter_by'](base_defaults, merge=salt['pillar.get']('letsencrypt:client')) %}
