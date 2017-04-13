@@ -10,6 +10,20 @@
 {%- for domain, params in client.get('domain', {}).iteritems() %}
 {%- if params.get('enabled', true) %}
 {%- set auth = params.auth|default(client.auth) %}
+{%- set main_domain = params.name|default(domain) %}
+{%- set cert_path = client.conf_dir + '/live/' + main_domain + '/cert.pem' %}
+{%- set subject_alternative_names = ['DNS:' + main_domain] %}
+{%- for n in params.get('names', []) %}
+    {%- set n = 'DNS:' + n %}
+    {%- if n not in subject_alternative_names %}
+        {%- do subject_alternative_names.append(n) %}
+    {%- endif %}
+{%- endfor %}
+{%- set subject_alternative_names = subject_alternative_names|sort|join(', ') %}
+
+certbot_openssl:
+    pkg.installed:
+        - name: {{ client.pkg_openssl }}
 
 certbot_{{ domain }}:
   cmd.run:
@@ -22,13 +36,17 @@ certbot_{{ domain }}:
         {%- elif auth.method in ['apache', 'nginx'] %}
         --{{ auth.method }}
         {%- endif %}
-        -d {{ params.name|default(domain) }}
+        -d {{ main_domain }}
         {%- for d in params.get('names', []) %}
         -d {{ d }}
         {%- endfor %}
-    - creates: {{ client.conf_dir }}/live/{{ params.name|default(domain) }}/cert.pem
+        --expand
+    {#- Check if there are missing cert file or it has missing domains, to (re)issue certificate. #}
+    {#- Please note only expanding certificate (adding domains) works. #}
+    - unless: test -e "{{ cert_path }}" && openssl x509 -text -in "{{ cert_path }}" | fgrep -q -e"{{ subject_alternative_names }}"
     - require:
       - cmd: certbot_installed
+      - pkg: certbot_openssl
 
 {%- else %}
 
