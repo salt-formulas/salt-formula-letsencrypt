@@ -1,0 +1,51 @@
+---
+driver:
+  name: docker
+  hostname: letsencrypt.ci.local
+  use_sudo: false
+
+provisioner:
+  name: salt_solo
+  salt_install: bootstrap
+  salt_bootstrap_url: https://bootstrap.saltstack.com
+  salt_version: latest
+  require_chef: false
+  log_level: error
+  formula: letsencrypt
+  grains:
+    noservices: True
+  dependencies:
+    - name: linux
+      repo: git
+      source: https://github.com/salt-formulas/salt-formula-linux
+  state_top:
+    base:
+      "*":
+        - linux
+        - letsencrypt
+  pillars:
+    top.sls:
+      base:
+        "*":
+          - linux_repo
+          - letsencrypt
+  pillars-from-files:
+    linux_repo.sls: tests/pillar/linux_repo.sls
+
+verifier:
+  name: inspec
+  sudo: true
+
+platforms:
+  - name: <%=ENV['PLATFORM'] || 'ubuntu-xenial'%>
+    driver_config:
+      image: <%=ENV['PLATFORM'] || 'trevorj/salty-whales:xenial'%>
+      platform: ubuntu
+
+suites:
+
+  - name: client
+    provisioner:
+      pillars-from-files:
+        letsencrypt.sls: tests/pillar/client.sls
+# vim: ft=yaml sw=2 ts=2 sts=2 tw=125

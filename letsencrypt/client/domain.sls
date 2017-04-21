@@ -20,7 +20,7 @@
     {%- endif %}
 {%- endfor %}
 {%- set subject_alternative_names = subject_alternative_names|sort|join(', ') %}
-
+{%- if not grains.get('noservices', False) %}
 certbot_{{ domain }}:
   cmd.run:
     - name: >
@@ -42,8 +42,8 @@ certbot_{{ domain }}:
     - unless: test -e "{{ cert_path }}" && openssl x509 -text -in "{{ cert_path }}" | fgrep -q -e"{{ subject_alternative_names }}"
     - require:
       - cmd: certbot_installed
-      - pkg: certbot_package_openssl
-
+      - pkg: certbot_packages_openssl
+{%- endif %}
 {%- else %}
 
 certbot_{{ domain }}_renew_absent:
