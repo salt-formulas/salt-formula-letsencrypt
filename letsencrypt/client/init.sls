@@ -6,6 +6,10 @@ include:
   - letsencrypt.client.legacy
   - letsencrypt.client.domain
 
+certbot_packages_openssl:
+    pkg.installed:
+        - name: {{ client.pkg_openssl }}
+
 {%- if client.source.engine == 'pkg' %}
 {% set extra_packages = [] %}
 {% if client.auth.method in ("apache", "nginx") %}
