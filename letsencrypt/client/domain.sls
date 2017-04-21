@@ -21,7 +21,7 @@
 {%- endfor %}
 {%- set subject_alternative_names = subject_alternative_names|sort|join(', ') %}
 
-certbot_openssl:
+certbot_{{ domain }}_{{ client.pkg_openssl }}_pkg:
     pkg.installed:
         - name: {{ client.pkg_openssl }}
 
@@ -46,7 +46,7 @@ certbot_{{ domain }}:
     - unless: test -e "{{ cert_path }}" && openssl x509 -text -in "{{ cert_path }}" | fgrep -q -e"{{ subject_alternative_names }}"
     - require:
       - cmd: certbot_installed
-      - pkg: certbot_openssl
+      - pkg: certbot_{{ domain }}_{{ client.pkg_openssl }}_pkg
 
 {%- else %}
 
