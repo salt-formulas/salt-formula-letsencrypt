@@ -29,4 +29,5 @@ default:
   pkg_openssl: openssl
 {%- endload %}
 
-{%- set client = salt['grains.filter_by'](base_defaults, merge=salt['pillar.get']('letsencrypt:client')) %}
+{%- set client = salt['grains.filter_by'](base_defaults, grain='os', merge=salt['pillar.get']('letsencrypt:client')) %}
+
