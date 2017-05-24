@@ -26,6 +26,19 @@ There are 3 installation methods available:
           source:
             engine: pkg
 
+  If the ``certbot`` package doesn't include Systemd ``.service`` and
+  ``.timer`` files, you can set them to be installed by this formula by
+  supplying ``install_units: True`` and ``cli``.
+
+  .. code-block:: yaml
+
+      letsencrypt:
+        client:
+          source:
+            engine: pkg
+            cli: /usr/bin/certbot
+            install_units: true
+
 - URL to certbot-auto (default)
 
   This is default installation method for systems with no available certbot
