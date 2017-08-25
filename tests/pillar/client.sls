@@ -17,3 +17,5 @@ letsencrypt:
           port: 80
       olddomain.org:
         enabled: false
+    source:
+      install_units: true
