@@ -1,5 +1,5 @@
 parameters:
-  leonardo:
+  letsencrypt:
     _support:
       collectd:
         enabled: false
