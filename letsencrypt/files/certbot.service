@@ -11,5 +11,5 @@ Documentation=https://letsencrypt.readthedocs.io/en/latest/
 
 [Service]
 Type=oneshot
-ExecStart={{ client.source.cli }} --no-self-upgrade -q renew
+ExecStart={{ client.source.cli }} --no-self-upgrade -q renew {% if client.hook %}--deploy-hook /usr/local/lib/certbot/hooks/deploy-hook{% endif %}
 PrivateTmp=true

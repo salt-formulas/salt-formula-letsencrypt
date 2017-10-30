@@ -14,4 +14,4 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-0 */12 * * * root test -x $(which certbot) -a \! -d /run/systemd/system && perl -e 'sleep int(rand(3600))' && certbot -q renew
+0 */12 * * * root test -x $(which certbot) -a \! -d /run/systemd/system && perl -e 'sleep int(rand(3600))' && certbot -q renew {% if client.hook %}--deploy-hook /usr/local/lib/certbot/hooks/deploy-hook{% endif %}

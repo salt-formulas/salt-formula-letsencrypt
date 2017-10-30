@@ -36,6 +36,9 @@ certbot_{{ domain }}:
         -d {{ d }}
         {%- endfor %}
         --expand
+        {%- if client.hook %}
+        --deploy-hook /usr/local/lib/certbot/hooks/deploy-hook
+        {%- endif %}
     {#- Check if there are missing cert file or it has missing domains, to (re)issue certificate. #}
     {#- Please note only expanding certificate (adding domains) works. #}
     - unless: test -e "{{ cert_path }}" && openssl x509 -text -in "{{ cert_path }}" | fgrep -q -e"{{ subject_alternative_names }}"

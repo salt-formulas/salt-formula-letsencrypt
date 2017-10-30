@@ -39,6 +39,9 @@ VOLUMES="$VOLUMES -v {{ client.auth.path|default('/var/www') }}:{{ client.auth.p
 VOLUMES="$VOLUMES -v {{ domain.auth.path|default('/var/www') }}:{{ domain.auth.path|default('/var/www') }}"
 {%- endif %}
 {%- endfor %}
+{%- if client.hook %}
+VOLUMES="$VOLUMES -v /usr/local/lib/certbot/hooks/deploy-hook:/usr/local/lib/certbot/hooks/deploy-hook"
+{%- endif %}
 
 # Only allocate tty if we detect one
 if [ -t 1 ]; then

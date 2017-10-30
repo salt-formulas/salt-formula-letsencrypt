@@ -102,9 +102,21 @@ certbot_cron:
   file.managed:
     - name: /etc/cron.d/certbot
     - source: salt://letsencrypt/files/cron
+    - template: jinja
     - require:
       - cmd: certbot_installed
 
+{%- endif %}
+
+{%- if client.hook %}
+certbot_deploy_hook:
+    file.managed:
+        - name: /usr/local/lib/certbot/hooks/deploy-hook
+        - source: {{ client.hook }}
+        - mode: "0755"
+        - template: jinja
+        - require:
+            - cmd: certbot_installed
 {%- endif %}
 
 {%- endif %}
