@@ -115,6 +115,7 @@ certbot_deploy_hook:
         - source: {{ client.hook }}
         - mode: "0755"
         - template: jinja
+        - makedirs: True
         - require:
             - cmd: certbot_installed
 {%- endif %}
