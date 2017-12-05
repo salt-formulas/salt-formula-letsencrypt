@@ -118,6 +118,50 @@ certbot_deploy_hook:
         - makedirs: True
         - require:
             - cmd: certbot_installed
+        {%- for domain, params in client.get('domain', {}).iteritems() %}
+        {%- if client.hook %}
+        - require_in:
+            - cmd: certbot_{{ domain }}
+        {%- endif %}
+        {%- endfor %}
+{%- endif %}
+
+{%- if client.auth.method == 'manual' %}
+cerbot_manual_auth_hook:
+    file.managed:
+        - name: /usr/local/lib/certbot/hooks/manual-auth-hook
+        - source: {{ client.auth.hooks.auth }}
+        - mode: "0755"
+        - template: jinja
+        - makedirs: true
+        {%- for domain, params in client.get('domain', {}).iteritems() %}
+        {%- if params.get('enabled', true) %}
+        {%- set auth = params.auth|default(client.auth) %}
+        {%- if auth.method == 'manual' %}
+        - require_in:
+            - cmd: certbot_{{ domain }}
+        {%- endif %}
+        {%- endif %}
+        {%- endfor %}
+
+cerbot_manual_cleanup_hook:
+    file.managed:
+        - name: /usr/local/lib/certbot/hooks/manual-cleanup-hook
+        - source: {{ client.auth.hooks.cleanup }}
+        - mode: "0755"
+        - template: jinja
+        - makedirs: true
+        - require:
+            - cmd: certbot_installed     
+        {%- for domain, params in client.get('domain', {}).iteritems() %}
+        {%- if params.get('enabled', true) %}
+        {%- set auth = params.auth|default(client.auth) %}
+        {%- if auth.method == 'manual' %}
+        - require_in:
+            - cmd: certbot_{{ domain }}
+        {%- endif %}
+        {%- endif %}
+        {%- endfor %}
 {%- endif %}
 
 {%- endif %}

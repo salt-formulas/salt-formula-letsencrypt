@@ -30,6 +30,8 @@ certbot_{{ domain }}:
         --webroot --webroot-path {{ auth.path }}
         {%- elif auth.method in ['apache', 'nginx'] %}
         --{{ auth.method }}
+        {%- elif auth.method == 'manual' %}
+        --manual --manual-public-ip-logging-ok --preferred-challenges {{ auth.type }} --manual-auth-hook /usr/local/lib/certbot/hooks/manual-auth-hook --manual-cleanup-hook /usr/local/lib/certbot/hooks/manual-cleanup-hook
         {%- endif %}
         -d {{ main_domain }}
         {%- for d in params.get('names', []) %}
