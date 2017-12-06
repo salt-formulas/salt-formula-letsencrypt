@@ -111,7 +111,7 @@ certbot_cron:
 {%- if client.hook %}
 certbot_deploy_hook:
     file.managed:
-        - name: /usr/local/lib/certbot/hooks/deploy-hook
+        - name: /etc/letsencrypt/custom-hooks/deploy-hook
         - source: {{ client.hook }}
         - mode: "0755"
         - template: jinja
@@ -129,7 +129,7 @@ certbot_deploy_hook:
 {%- if client.auth.method == 'manual' %}
 cerbot_manual_auth_hook:
     file.managed:
-        - name: /usr/local/lib/certbot/hooks/manual-auth-hook
+        - name: /etc/letsencrypt/custom-hooks/manual-auth-hook
         - source: {{ client.auth.hooks.auth }}
         - mode: "0755"
         - template: jinja
@@ -146,7 +146,7 @@ cerbot_manual_auth_hook:
 
 cerbot_manual_cleanup_hook:
     file.managed:
-        - name: /usr/local/lib/certbot/hooks/manual-cleanup-hook
+        - name: /etc/letsencrypt/custom-hooks/manual-cleanup-hook
         - source: {{ client.auth.hooks.cleanup }}
         - mode: "0755"
         - template: jinja

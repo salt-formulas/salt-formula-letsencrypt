@@ -31,7 +31,7 @@ certbot_{{ domain }}:
         {%- elif auth.method in ['apache', 'nginx'] %}
         --{{ auth.method }}
         {%- elif auth.method == 'manual' %}
-        --manual --manual-public-ip-logging-ok --preferred-challenges {{ auth.type }} --manual-auth-hook /usr/local/lib/certbot/hooks/manual-auth-hook --manual-cleanup-hook /usr/local/lib/certbot/hooks/manual-cleanup-hook
+        --manual --manual-public-ip-logging-ok --preferred-challenges {{ auth.type }} --manual-auth-hook /etc/letsencrypt/custom-hooks/manual-auth-hook --manual-cleanup-hook /etc/letsencrypt/custom-hooks/manual-cleanup-hook
         {%- endif %}
         -d {{ main_domain }}
         {%- for d in params.get('names', []) %}
@@ -39,7 +39,7 @@ certbot_{{ domain }}:
         {%- endfor %}
         --expand
         {%- if client.hook %}
-        --deploy-hook /usr/local/lib/certbot/hooks/deploy-hook
+        --deploy-hook /etc/letsencrypt/custom-hooks/deploy-hook
         {%- endif %}
     {#- Check if there are missing cert file or it has missing domains, to (re)issue certificate. #}
     {#- Please note only expanding certificate (adding domains) works. #}
