@@ -107,4 +107,21 @@ certbot_cron:
 
 {%- endif %}
 
+{%- for hookset, hooks in client.get("hooks", {}).items() %}
+{%- for hook in hooks %}
+{#- FIXME: Should probably complain if something other than
+    pre/post/deploy is given, but I'm not sure how. #}
+
+certbot_renewal_{{ hookset }}_hook_{{ loop.index }}:
+  file.managed:
+    - name: /etc/letsencrypt/renewal-hooks/{{ hookset }}/{{ hook.split("/") | last }}
+    - source: {{ hook }}
+    - template: jinja
+    - mode: 700
+    - require:
+      - cmd: certbot_installed
+
+{%- endfor %}
+{%- endfor %}
+
 {%- endif %}
