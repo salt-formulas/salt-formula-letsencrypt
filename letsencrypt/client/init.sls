@@ -111,10 +111,10 @@ certbot_cron:
 {%- for hook in hooks %}
 {#- FIXME: Should probably complain if something other than
     pre/post/deploy is given, but I'm not sure how. #}
-
-certbot_renewal_{{ hookset }}_hook_{{ loop.index }}:
+{%- set basename = hook.split("/") | last %}
+certbot_renewal_{{ hookset }}_hook_{{ basename }}:
   file.managed:
-    - name: /etc/letsencrypt/renewal-hooks/{{ hookset }}/{{ hook.split("/") | last }}
+    - name: /etc/letsencrypt/renewal-hooks/{{ hookset }}/{{ basename }}
     - source: {{ hook }}
     - template: jinja
     - mode: 700
