@@ -206,6 +206,12 @@ don't run as root, to move certs somewhere they can access:
             - salt://path/to/deployhook1.sh
           post:
             - salt://path/to/posthook1.sh
+        # You can define hooks literally in pillar too
+        pillarhooks:
+          deploy:
+            deployhook1.sh: |
+              #!/bin/bash
+              echo "Triggered deploy hook"
 
 Legacy configuration
 --------------------

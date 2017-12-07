@@ -120,7 +120,18 @@ certbot_renewal_{{ hookset }}_hook_{{ loop.index }}:
     - mode: 700
     - require:
       - cmd: certbot_installed
+{%- endfor %}
+{%- endfor %}
 
+{%- for hookset, hooks in client.get("pillarhooks", {}).items() %}
+{%- for basename in hooks.keys() %}
+certbot_renewal_{{ hookset }}_phook_{{ loop.index }}:
+  file.managed:
+    - name: /etc/letsencrypt/renewal-hooks/{{ hookset }}/{{ basename }}
+    - contents_pillar: letsencrypt:client:pillarhooks:{{ hookset }}:{{ basename }}
+    - mode: 700
+    - require:
+      - cmd: certbot_installed
 {%- endfor %}
 {%- endfor %}
 
