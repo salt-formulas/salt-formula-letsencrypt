@@ -10,6 +10,6 @@ Vcs-Git: https://github.com/tcpcloud/salt-formula-letsencrypt.git
 
 Package: salt-formula-letsencrypt
 Architecture: all
-Depends: ${misc:Depends}, salt-master, reclass
+Depends: ${misc:Depends}
 Description: letsencrypt salt formula
  Install and configure letsencrypt system.
