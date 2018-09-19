@@ -237,7 +237,7 @@ Example of authentication via another port without stopping nginx server::
           ...
           renew-by-default = True
           http-01-port = 9999
-          standalone-supported-challenges = http-01
+          preferred-challenges = http-01
         domainset:
           www:
             - example.com
