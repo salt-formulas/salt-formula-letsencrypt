@@ -18,7 +18,7 @@ certbot_packages_openssl:
 
 certbot_packages:
   pkg.installed:
-    - names: {{ (client.source.pkgs + extra_packages) | tojson }}
+    - names: {{ (client.source.pkgs + extra_packages) | json }}
     - watch_in:
       - cmd: certbot_installed
 
