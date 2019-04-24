@@ -7,7 +7,7 @@
 {%-   set staging = '' %}
 {%- endif %}
 
-{%- for domain, params in client.get('domain', {}).iteritems() %}
+{%- for domain, params in client.get('domain', {}).items() %}
 {%- if params.get('enabled', true) %}
 {%- set auth = params.auth|default(client.auth) %}
 {%- set main_domain = params.name|default(domain) %}
