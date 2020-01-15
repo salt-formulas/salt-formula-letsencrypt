@@ -31,6 +31,9 @@ certbot_{{ domain }}:
         {%- elif auth.method in ['apache', 'nginx'] %}
         --{{ auth.method }}
         {%- endif %}
+        {%- if params.get('deploy_hook', None) %}
+        --deploy-hook '{{ params.deploy_hook }}'
+        {%- endif %}
         -d {{ main_domain }}
         {%- for d in params.get('names', []) %}
         -d {{ d }}
