@@ -191,6 +191,28 @@ You are able to use multidomain certificates:
             - awk.opensource-expert.com
             - www.awk.opensource-expert.com
 
+You can add renewal hooks if needed; these can be useful for services that
+don't run as root, to move certs somewhere they can access:
+
+.. code-block:: yaml
+
+    letsencrypt:
+      client:
+        hooks:
+          pre:
+            - salt://path/to/prehook1.sh
+            - salt://path/to/prehook2.sh
+          deploy:
+            - salt://path/to/deployhook1.sh
+          post:
+            - salt://path/to/posthook1.sh
+        # You can define hooks literally in pillar too
+        pillarhooks:
+          deploy:
+            deployhook1.sh: |
+              #!/bin/bash
+              echo "Triggered deploy hook"
+
 Legacy configuration
 --------------------
 
